@@ -1,12 +1,12 @@
 import sqlite3
-import download_update
+import importlib
 from platform import system
 from time import time
 from random import shuffle
 from subprocess import Popen
 from json import load, dump
 from os.path import exists
-
+import download_update
 
 def print_text():
     print(f"""\
@@ -134,9 +134,13 @@ while a != 'exit':
             clear_mistakes()
             continue
         elif a == 'update':
+            importlib.reload(download_update)
+            state_update = download_update.update_check()
             text_cls()
             download_update.update_check()
             download_update.update()
+            importlib.reload(download_update)
+            state_update = download_update.update_check()
             input()
             continue
         elif 0 < a <= 20:
