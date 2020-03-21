@@ -1,11 +1,16 @@
 from urllib.request import urlretrieve
 from urllib.request import urlopen
+from urllib.error import URLError
 
 version_main = 1
 version_database = 0
 list_update = []
 def update_check():
-    check_version = urlopen("https://raw.githubusercontent.com/LescautManon/Manon/master/update.txt").read()
+    try:
+        check_version = urlopen("https://raw.githubusercontent.com/LescautManon/Manon/master/update.txt").read()
+    except URLError:
+        return ""
+
     check_version = check_version.decode('utf-8')
     for i in check_version:
         if i.isdigit():
@@ -18,6 +23,9 @@ def update_check():
     
 def update():
     counter_updates = 0
+    if len(list_update) == 0:
+        print ("Возможно, нет подключения к интернету")
+        return
     if list_update[0] > version_main:
         url = 'https://raw.githubusercontent.com/LescautManon/Manon/master/main.py'
         filename = "main.py"
