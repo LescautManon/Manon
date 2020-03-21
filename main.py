@@ -103,7 +103,7 @@ while a != 'exit':
     print_text()
     a = input("Введи номер практики: ")
     text_cls()
-    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes']
+    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes', 'update']
     if a not in value_a and not a.isdigit():
         continue
     elif a.isdigit():
