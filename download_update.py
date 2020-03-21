@@ -4,6 +4,7 @@ from urllib.error import URLError
 
 version_main = 1
 version_database = 0
+version_download_update = 0
 list_update = []
 def update_check():
     try:
@@ -17,7 +18,8 @@ def update_check():
         if i.isdigit():
             list_update.append(int(i))
     if list_update[0] > version_main \
-    or list_update[1] > version_database:
+    or list_update[1] > version_database \
+    or list_update[2] > version_download_update:
         return "Вышла новая версия. Для обновления введи 'update'"
     else:
         return ""
@@ -33,7 +35,7 @@ def update():
         urlretrieve(url, filename)
         print('update main.py OK')
         old_version = version_main
-        new_version = version_main + 1
+        new_version = list_update[0]
         import re
         data = open('download_update.py').read()
         o = open('download_update.py','w')
@@ -48,7 +50,7 @@ def update():
         urlretrieve(url, filename)
         print('update mydatabase.db OK')
         old_version = version_database
-        new_version = version_database + 1
+        new_version = list_update[1]
         import re
         data = open('download_update.py').read()
         o = open('download_update.py','w')
