@@ -133,6 +133,12 @@ while a != 'exit':
         elif a == 'clear mistakes':
             clear_mistakes()
             continue
+        elif a == 'update':
+            text_cls()
+            download_update.update_check()
+            download_update.update()
+            input()
+            continue
         elif 0 < a <= 20:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
