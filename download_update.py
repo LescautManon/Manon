@@ -3,6 +3,7 @@ from urllib.request import urlopen
 
 def update_check():
     version_main = 1
+    version_database = 1
 
     list_update = []
     check_version = urlopen("https://raw.githubusercontent.com/LescautManon/Manon/master/update.txt").read()
@@ -12,7 +13,12 @@ def update_check():
             list_update.append(int(i))
 
     if list_update[0] > version_main:
-        return "Вышла новая версия. Для обновления введи 'update'"
+        return "Вышла новая версия main. Для обновления введи 'update'"
+    else:
+        return ""
+    
+    if list_update[1] > version_database:
+        return "Вышла новая версия mydatabase. Для обновления введи 'update'"
     else:
         return ""
 
