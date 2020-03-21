@@ -49,3 +49,5 @@ def update():
 
     if counter_updates == 0:
         print("Обновлений нет")
+    else:
+        print("Обновление завершено")
