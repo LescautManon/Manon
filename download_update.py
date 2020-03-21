@@ -2,7 +2,7 @@ from urllib.request import urlretrieve
 from urllib.request import urlopen
 
 def update_check():
-    version_main = 0
+    version_main = 1
 
     list_update = []
     check_version = urlopen("https://raw.githubusercontent.com/LescautManon/Manon/master/update.txt").read()
