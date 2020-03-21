@@ -12,6 +12,7 @@ def update_check():
         return ""
 
     check_version = check_version.decode('utf-8')
+    check_version = check_version.split("\n")
     for i in check_version:
         if i.isdigit():
             list_update.append(int(i))
