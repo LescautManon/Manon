@@ -35,6 +35,7 @@ use in mistakes: time, show stat, pause, exit, -(for delete sentence)
 18. Present Simple. Special Question. (20)
 19. Present Simple. Questions. (21.1, 21.2)
 20. Words (25) *
+21. My
 {state_update}
         """)
 
@@ -104,7 +105,7 @@ while a != 'exit':
     print_text()
     a = input("Введи номер практики: ")
     text_cls()
-    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes', 'update']
+    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes', 'update', 'new']
     if a not in value_a and not a.isdigit():
         continue
     elif a.isdigit():
@@ -143,7 +144,8 @@ while a != 'exit':
             importlib.reload(download_update)
             state_update = download_update.update_check()
             input()
-            continue
+            Popen(['python', 'main.py'])
+            break
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
