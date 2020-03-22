@@ -11,7 +11,7 @@ import download_update
 
 def print_text():
     print(f"""\
-use in main menu: all practice, mistakes, clear mistakes, pause, exit
+use in main menu: mistakes, pause, clear mistakes, all practice, exit
 use in translate: time, show stat, pause, exit
 use in mistakes: time, show stat, pause, exit, -(for delete sentence)
 
@@ -35,7 +35,6 @@ use in mistakes: time, show stat, pause, exit, -(for delete sentence)
 18. Present Simple. Special Question. (20)
 19. Present Simple. Questions. (21.1, 21.2)
 20. Words (25) *
-21. ~murr
 {state_update}
         """)
 
@@ -72,10 +71,10 @@ def normalize_list(rus_, eng_):
 
 def show_stat():
     tm = (time() - tic) + tm_temp
-    print("\n", " " * 25, int(tm / 60), " min ", round(tm % 60), " sec", sep="")
-    print(" " * 25, f"{correctly_sentence} correctly / ", end="")
+    print("\n", " " * 1, int(tm / 60), " min ", round(tm % 60), " sec", sep="")
+    print(" " * 1, f"{correctly_sentence} correctly / ", end="")
     print(f"{percent_mistakes_temp} mist / {pass_sentence} pass / {percent_mistakes} total")
-    print(" " * 26, "percent mistakes:", round(100 / percent_mistakes * percent_mistakes_temp, 1))
+    print(" " * 2, "percent mistakes:", round(100 / percent_mistakes * percent_mistakes_temp, 1))
     if len(list_mistakes) != 0:
         print()
         print("Mistakes:")
@@ -110,7 +109,7 @@ while a != 'exit':
         continue
     elif a.isdigit():
         a = int(a)
-        if a < 1 or a > 21:
+        if a < 1 or a > 20:
             continue
     flag = True
     if a == 'pause':
@@ -198,7 +197,7 @@ while a != 'exit':
             continue
         if translate == "time":
             tm = (time() - tic) + tm_temp
-            print(" " * (len(rus[num]) + len(str(len(setNum))) + 8), int(tm / 60), " min ", round(tm % 60), " sec", sep="")
+            print(" " * (len(rus[num]) + len(str(len(setNum))) + 2), int(tm / 60), " min ", round(tm % 60), " sec", sep="")
             continue
         if translate == "":
             print(eng[num])

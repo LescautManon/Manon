@@ -2,9 +2,9 @@ from urllib.request import urlretrieve
 from urllib.request import urlopen
 from urllib.error import URLError
 
-version_main = 2
-version_database = 1
-version_download_update = 1
+version_main = 3
+version_database = 2
+version_download_update = 2
 list_update = []
 
 
