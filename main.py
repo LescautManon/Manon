@@ -40,7 +40,6 @@ use in mistakes: time, show stat, pause, exit, -(for delete sentence)
 18. Present Simple. Special Question. (20)
 19. Present Simple. Questions. (21.1, 21.2)
 20. Words (25) *
-dsfjh
 {state_update}
         """)
 
