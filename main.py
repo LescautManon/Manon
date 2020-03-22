@@ -146,6 +146,9 @@ while a != 'exit':
             input()
             Popen(['python', 'main.py'])
             break
+        elif a == 'new':
+            Popen(['python', 'main.py'])
+            break
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
