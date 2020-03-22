@@ -1,5 +1,6 @@
 import sqlite3
 import importlib
+from sys import argv
 from platform import system
 from time import time
 from random import shuffle
@@ -7,6 +8,10 @@ from subprocess import Popen
 from json import load, dump
 from os.path import exists
 import download_update
+
+if len(argv) == 1:
+    Popen(['python', 'main.py', 'temp'])
+    exit()
 
 
 def print_text():
@@ -104,7 +109,7 @@ while a != 'exit':
     print_text()
     a = input("Введи номер практики: ")
     text_cls()
-    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes', 'update', 'new']
+    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes', 'update']
     if a not in value_a and not a.isdigit():
         continue
     elif a.isdigit():
@@ -142,12 +147,8 @@ while a != 'exit':
             download_update.update()
             importlib.reload(download_update)
             state_update = download_update.update_check()
-            input()
-            Popen(['python', 'main.py'])
-            break
-        elif a == 'new':
-            Popen(['python', 'main.py'])
-            break
+            Popen(['python', 'main.py', 'temp'])
+            exit()
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
