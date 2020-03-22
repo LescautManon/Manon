@@ -9,9 +9,9 @@ from json import load, dump
 from os.path import exists
 import download_update
 
-# if len(argv) == 1:
-#     Popen(['python', 'main.py', 'temp'])
-#     exit()
+if len(argv) == 1:
+    Popen(['python', 'main.py', 'temp'])
+    exit()
 
 
 def print_text():
@@ -147,8 +147,8 @@ while a != 'exit':
             download_update.update()
             importlib.reload(download_update)
             state_update = download_update.update_check()
-            Popen(['python', 'main.py', 'temp'])
             input()
+            Popen(['python', 'main.py', 'temp'])
             exit()
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
