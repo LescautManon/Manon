@@ -35,6 +35,7 @@ use in mistakes: time, show stat, pause, exit, -(for delete sentence)
 18. Present Simple. Special Question. (20)
 19. Present Simple. Questions. (21.1, 21.2)
 20. Words (25) *
+21. ~murr
 {state_update}
         """)
 
@@ -109,7 +110,7 @@ while a != 'exit':
         continue
     elif a.isdigit():
         a = int(a)
-        if a < 1 or a > 20:
+        if a < 1 or a > 21:
             continue
     flag = True
     if a == 'pause':
@@ -144,7 +145,7 @@ while a != 'exit':
             state_update = download_update.update_check()
             input()
             continue
-        elif 0 < a <= 20:
+        elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
             cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{a}' ")
