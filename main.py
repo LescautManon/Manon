@@ -9,9 +9,9 @@ from json import load, dump
 from os.path import exists
 import download_update
 
-if len(argv) == 1:
-    Popen(['python', 'main.py', 'temp'], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    exit()
+# if len(argv) == 1:
+#     Popen(['python', 'main.py', 'temp'])
+#     exit()
 
 
 def print_text():
