@@ -148,6 +148,7 @@ while a != 'exit':
             importlib.reload(download_update)
             state_update = download_update.update_check()
             Popen(['python', 'main.py', 'temp'])
+            input()
             exit()
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
@@ -215,7 +216,7 @@ while a != 'exit':
             continue
         if translate == "exit":
             break
-        if translate != "" and (not translate[0].istitle() or translate[-1] != "."):
+        if not translate[0].istitle() or translate[-1] != ".":
             if not translate[0].istitle():
                 translate = translate[0].upper() + translate[1:]
             if translate[-1] != "." and eng[num][-1] == ".":

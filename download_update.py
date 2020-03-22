@@ -2,9 +2,9 @@ from urllib.request import urlretrieve
 from urllib.request import urlopen
 from urllib.error import URLError
 
-version_main = 8
+version_main = 10
 version_database = 2
-version_download_update = 2
+version_download_update = 3
 list_update = []
 
 
@@ -18,10 +18,10 @@ def update_check():
     for i in check_version:
         if i.isdigit():
             list_update.append(int(i))
-    if list_update[0] > version_main \
-    or list_update[1] > version_database \
-    or list_update[2] > version_download_update:
-        return "Вышла новая версия. Для обновления введи 'update'"
+    if (list_update[0] > version_main
+        or list_update[1] > version_database
+            or list_update[2] > version_download_update):
+        return "Для обновления введи 'update'"
     else:
         return ""
 
