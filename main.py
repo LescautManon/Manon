@@ -8,6 +8,7 @@ from json import load, dump
 from os.path import exists
 import download_update
 
+
 def print_text():
     print(f"""\
 use in main menu: all practice, mistakes, clear mistakes, pause, exit
