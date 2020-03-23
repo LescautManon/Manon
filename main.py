@@ -1,6 +1,5 @@
 import sqlite3
 import importlib
-from sys import argv
 from platform import system
 from time import time
 from random import shuffle
@@ -8,10 +7,6 @@ from subprocess import Popen
 from json import load, dump
 from os.path import exists
 import download_update
-
-# if len(argv) == 1:
-#     Popen(['python', 'main.py', 'temp'])
-#     exit()
 
 
 def print_text():
@@ -89,7 +84,6 @@ def show_stat():
             print(list_mistakes[i + 3])
 
 
-# state_update = download_update.update_check()
 if system() == "Windows":
     clear = "cls"
 else:
@@ -139,17 +133,12 @@ while a != 'exit':
             clear_mistakes()
             continue
         elif a == 'update':
-            importlib.reload(download_update)
-            state_update = download_update.update_check()
             text_cls()
             download_update.update_check()
             download_update.update()
             importlib.reload(download_update)
-            state_update = download_update.update_check()
             input()
             continue
-            # Popen(['python', 'main.py', 'temp'])
-            # exit()
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
