@@ -9,9 +9,9 @@ from json import load, dump
 from os.path import exists
 import download_update
 
-if len(argv) == 1:
-    Popen(['python', 'main.py', 'temp'])
-    exit()
+# if len(argv) == 1:
+#     Popen(['python', 'main.py', 'temp'])
+#     exit()
 
 
 def print_text():
@@ -40,7 +40,6 @@ use in mistakes: time, show stat, pause, exit, -(for delete sentence)
 18. Present Simple. Special Question. (20)
 19. Present Simple. Questions. (21.1, 21.2)
 20. Words (25) *
-{state_update}
         """)
 
 
@@ -90,7 +89,7 @@ def show_stat():
             print(list_mistakes[i + 3])
 
 
-state_update = download_update.update_check()
+# state_update = download_update.update_check()
 if system() == "Windows":
     clear = "cls"
 else:
@@ -148,8 +147,9 @@ while a != 'exit':
             importlib.reload(download_update)
             state_update = download_update.update_check()
             input()
-            Popen(['python', 'main.py', 'temp'])
-            exit()
+            continue
+            # Popen(['python', 'main.py', 'temp'])
+            # exit()
         elif True:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
