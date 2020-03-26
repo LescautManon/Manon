@@ -98,17 +98,9 @@ for num, i in enumerate(mistakes):
     mistakes[num] = mistakes[num][0]
 a = ''
 while a != 'exit':
-    text_cls()
     print_text()
     a = input("Введи номер практики: ")
     text_cls()
-    value_a = ['mistakes', 'pause', 'all practice', 'clear mistakes', 'update']
-    if a not in value_a and not a.isdigit():
-        continue
-    elif a.isdigit():
-        a = int(a)
-        if a < 1 or a > 20:
-            continue
     flag = True
     if a == 'pause':
         flag = False
@@ -139,11 +131,13 @@ while a != 'exit':
             importlib.reload(download_update)
             input()
             continue
-        elif True:
+        elif a.isdigit() and 20 >= int(a) > 0:
             cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
             rus = (cursor.fetchall())
             cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{a}' ")
             eng = (cursor.fetchall())
+        else:
+            continue
         rus, eng = normalize_list(rus, eng)
         if a == 15:
             setNum = [i for i in range(0, len(rus))]
