@@ -69,19 +69,19 @@ def normalize_list(rus_, eng_):
 
 
 def show_stat():
-    tm = (time() - tic) + tm_temp
-    print("\n", " " * 1, int(tm / 60), " min ", round(tm % 60), " sec", sep="")
+    tm_ = (time() - tic) + tm_temp
+    print("\n", " " * 1, int(tm_ / 60), " min ", round(tm_ % 60), " sec", sep="")
     print(" " * 1, f"{correctly_sentence} correctly / ", end="")
     print(f"{percent_mistakes_temp} mist / {pass_sentence} pass / {percent_mistakes} total")
     print(" " * 2, "percent mistakes:", round(100 / percent_mistakes * percent_mistakes_temp, 1))
     if len(list_mistakes) != 0:
         print()
         print("Mistakes:")
-        for i in range(0, len(list_mistakes), 4):
-            print(list_mistakes[i], end=". ")
-            print(list_mistakes[i + 1], end=" ")
-            print(list_mistakes[i + 2])
-            print(list_mistakes[i + 3])
+        for i_ in range(0, len(list_mistakes), 4):
+            print(list_mistakes[i_], end=". ")
+            print(list_mistakes[i_ + 1], end=" ")
+            print(list_mistakes[i_ + 2])
+            print(list_mistakes[i_ + 3])
 
 
 if system() == "Windows":
@@ -96,68 +96,80 @@ cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
 mistakes = (cursor1.fetchall())
 for num, i in enumerate(mistakes):
     mistakes[num] = mistakes[num][0]
-a = ''
-while a != 'exit':
+added_practices = 20
+enter = ''
+while enter != 'exit':
+    text_cls()
     print_text()
-    a = input("Введи номер практики: ")
+    enter = input("Введи номер практики: ")
     text_cls()
     flag = True
-    if a == 'pause':
+    if enter == 'mistakes':
+        cursor1.execute("SELECT rus FROM albums WHERE num_practice='0' ")
+        rus = (cursor1.fetchall())
+        cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
+        eng = (cursor1.fetchall())
+        if len(rus) == 0:
+            continue
+    elif enter == 'pause':
         flag = False
         pause = read_pause()
         if pause == 0:
             continue
-        setNum, rus, eng, a, tm_temp = pause[0], pause[1], pause[2], pause[3], pause[4]
-    if flag:
-        if a == 'mistakes':
-            cursor1.execute("SELECT rus FROM albums WHERE num_practice='0' ")
-            rus = (cursor1.fetchall())
-            cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
-            eng = (cursor1.fetchall())
-            if len(rus) == 0:
-                continue
-        elif a == 'all practice':
+        setNum, enter, tm_temp = pause[0], pause[1], pause[2]
+        if enter == 'all practice':
             cursor.execute("SELECT rus FROM albums")
             rus = (cursor.fetchall())
             cursor.execute("SELECT eng FROM albums")
             eng = (cursor.fetchall())
-        elif a == 'clear mistakes':
-            clear_mistakes()
-            continue
-        elif a == 'update':
-            text_cls()
-            download_update.update_check()
-            download_update.update()
-            importlib.reload(download_update)
-            input()
-            continue
-        elif a.isdigit() and 20 >= int(a) > 0:
-            cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{a}' ")
+        else:
+            cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
             rus = (cursor.fetchall())
-            cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{a}' ")
+            cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
             eng = (cursor.fetchall())
-        else:
-            continue
+    elif enter == 'all practice':
+        cursor.execute("SELECT rus FROM albums")
+        rus = (cursor.fetchall())
+        cursor.execute("SELECT eng FROM albums")
+        eng = (cursor.fetchall())
+    elif enter == 'clear mistakes':
+        clear_mistakes()
+        continue
+    elif enter == 'update':
+        text_cls()
+        download_update.update_check()
+        download_update.update()
+        importlib.reload(download_update)
+        input()
+        continue
+    elif enter.isdigit() and added_practices >= int(enter) > 0:
+        cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
+        rus = (cursor.fetchall())
+        cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
+        eng = (cursor.fetchall())
+    else:
+        continue
+    if enter == 15:
+        setNum = [i for i in range(0, len(rus))]
+        am = [[0] * 3 for i in range(int(len(setNum) / 3))]
+        m = 0
+        k = 0
+        t = 0
+        while m < len(setNum) / 3:
+            if k < 3:
+                am[m][k] = setNum[t]
+                k += 1
+                t += 1
+            else:
+                k = 0
+                m += 1
+        shuffle(am)
+        setNum = []
+        for i in am:
+            setNum.extend(i)
+    else:
         rus, eng = normalize_list(rus, eng)
-        if a == 15:
-            setNum = [i for i in range(0, len(rus))]
-            am = [[0] * 3 for i in range(int(len(setNum) / 3))]
-            m = 0
-            k = 0
-            t = 0
-            while m < len(setNum) / 3:
-                if k < 3:
-                    am[m][k] = setNum[t]
-                    k += 1
-                    t += 1
-                else:
-                    k = 0
-                    m += 1
-            shuffle(am)
-            setNum = []
-            for i in am:
-                setNum.extend(i)
-        else:
+        if flag:
             setNum = [i for i in range(0, len(rus))]
             shuffle(setNum)
             tm_temp = 0
@@ -173,13 +185,13 @@ while a != 'exit':
         print(rus[num], end=" ")
         translate = input()
         if translate == "pause":
-            pause = list(range(0, 5))
+            pause = list(range(0, 3))
             tm_temp = (time() - tic) + tm_temp
-            pause[0], pause[1], pause[2], pause[3], pause[4] = setNum, rus, eng, a, tm_temp
+            pause[0], pause[1], pause[2] = setNum, enter, tm_temp
             with open('pause.txt', 'w') as file:
                 dump(pause, file)
             break
-        if translate == "-" and a == "mistakes":
+        if translate == "-" and enter == "mistakes":
             cursor1.execute("DELETE FROM albums WHERE eng = ?", (eng[num],))
             conn1.commit()
             setNum.remove(num)
