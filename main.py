@@ -10,30 +10,31 @@ import download_update
 
 
 def print_text():
-    print(f"""\
+    print("""\
 menu: mistakes, pause, clear mistakes, exit
 translate: time, show stat, pause, exit
-mistakes: time, show stat, pause, exit, - (for delete sentence)
+mistakes: - (for delete sentence)
 
-1. Present Simple. Subject + verb.
-2. Present Simple. I, We, You, They + verb.
-3. Present Simple. I, We, You, They + verb.
-4. Present Simple. I, We, You, They + verb. He/She/It + verb + s.
-5. Present Simple. I, We, You, They + verb.(5.1, 5.2, 5.3).
+Present Simple
+1. Subject + verb.
+2. I, We, You, They + verb.
+3. I, We, You, They + verb.
+4. I, We, You, They + verb. He/She/It + verb + s.
+5. I, We, You, They + verb.(5.1, 5.2, 5.3).
 6. Want.(6).
 7. I like + ...
-8. Present Simple (negative form). I, We, You, They + don't + verb.
+8. Negative form. I, We, You, They + don't + verb.
 9. I, We, You, They + don't + verb. He, She, It + doesn't + verb.
 10. Need.
 11. Test. (11.1, 11.2, 12.1, 12.2, 13.1, 13.2)
-12. Present Simple. Questions. I, We, You, They. (14)
-13. Present Simple. Questions. He, She, It. (15)
-14. Present Simple. Questions. (16)
-15. Present Simple. + / - / ?  (17)
-16. Present Simple. Special Question. (18.1, 18.2)
-17. Present Simple. Special Question. (19.1, 19.2)
-18. Present Simple. Special Question. (20)
-19. Present Simple. Questions. (21.1, 21.2)
+12. Questions. I, We, You, They. (14)
+13. Questions. He, She, It. (15)
+14. Questions. (16)
+15. + / - / ?  (17)
+16. Special Question. (18.1, 18.2)
+17. Special Question. (19.1, 19.2)
+18. Special Question. (20)
+19. Questions. (21.1, 21.2)
 20. Words (25) *
         """)
 
