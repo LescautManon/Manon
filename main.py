@@ -11,9 +11,9 @@ import download_update
 
 def print_text():
     print(f"""\
-use in main menu: mistakes, pause, clear mistakes, all practice, exit
-use in translate: time, show stat, pause, exit
-use in mistakes: time, show stat, pause, exit, -(for delete sentence)
+menu: mistakes, pause, clear mistakes, exit
+translate: time, show stat, pause, exit
+mistakes: time, show stat, pause, exit, - (for delete sentence)
 
 1. Present Simple. Subject + verb.
 2. Present Simple. I, We, You, They + verb.
@@ -117,20 +117,9 @@ while enter != 'exit':
         if pause == 0:
             continue
         setNum, enter, tm_temp = pause[0], pause[1], pause[2]
-        if enter == 'all practice':
-            cursor.execute("SELECT rus FROM albums")
-            rus = (cursor.fetchall())
-            cursor.execute("SELECT eng FROM albums")
-            eng = (cursor.fetchall())
-        else:
-            cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
-            rus = (cursor.fetchall())
-            cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
-            eng = (cursor.fetchall())
-    elif enter == 'all practice':
-        cursor.execute("SELECT rus FROM albums")
+        cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
         rus = (cursor.fetchall())
-        cursor.execute("SELECT eng FROM albums")
+        cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
         eng = (cursor.fetchall())
     elif enter == 'clear mistakes':
         clear_mistakes()

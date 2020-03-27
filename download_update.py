@@ -18,7 +18,6 @@ def update_check():
     for i in check_version:
         if i.isdigit():
             list_update.append(int(i))
-    print(list_update)
     if (list_update[0] > version_main
         or list_update[1] > version_database
             or list_update[2] > version_download_update):
