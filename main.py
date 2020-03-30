@@ -37,7 +37,6 @@ Present Simple
 18. Special Question. (20)
 19. Questions. (21.1, 21.2)
 20. Words (25) *
-21. 123
         """)
 
 
