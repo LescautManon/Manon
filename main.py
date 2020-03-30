@@ -188,7 +188,7 @@ while enter != 'exit':
             continue
         if translate == "time":
             tm = (time() - tic) + tm_temp
-            print(" " * (len(rus[num]) + len(str(len(setNum))) + 2), int(tm / 60), " min ", round(tm % 60), " sec", sep="")
+            print(" ", int(tm / 60), " min ", round(tm % 60), " sec", sep="")
             continue
         if translate == "":
             print(eng[num])
