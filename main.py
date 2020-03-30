@@ -1,5 +1,6 @@
 import sqlite3
-import importlib
+from subprocess import run
+from importlib import reload
 from platform import system
 from time import time
 from random import shuffle
@@ -134,9 +135,14 @@ while enter != 'exit':
         text_cls()
         download_update.update_check()
         download_update.update()
-        importlib.reload(download_update)
+        reload(download_update)
         input()
-        continue
+        try:
+            run(["python", "main.py"])
+        except:
+            Exception
+        exit()
+        # continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
         rus, eng = load_sentences()
     else:
