@@ -44,12 +44,6 @@ def text_cls():
     p.communicate(input=b"\n")
 
 
-def clear_mistakes():
-    cursor1.execute("DELETE FROM albums")
-    cursor1.execute("VACUUM")
-    conn.commit()
-
-
 def read_pause():
     pause_ = 0
     if exists('pause.txt'):
@@ -60,6 +54,21 @@ def read_pause():
             except ValueError:
                 pass
     return pause_
+
+
+def load_sentences():
+    if enter == 'mistakes':
+        cursor1.execute("SELECT rus FROM albums WHERE num_practice='0' ")
+        rus_ = (cursor1.fetchall())
+        cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
+        eng_ = (cursor1.fetchall())
+        return rus_, eng_
+    else:
+        cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
+        rus_ = (cursor.fetchall())
+        cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
+        eng_ = (cursor.fetchall())
+        return rus_, eng_
 
 
 def normalize_list(rus_, eng_):
@@ -106,10 +115,7 @@ while enter != 'exit':
     text_cls()
     flag = True
     if enter == 'mistakes':
-        cursor1.execute("SELECT rus FROM albums WHERE num_practice='0' ")
-        rus = (cursor1.fetchall())
-        cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
-        eng = (cursor1.fetchall())
+        rus, eng = load_sentences()
         if len(rus) == 0:
             continue
     elif enter == 'pause':
@@ -118,12 +124,11 @@ while enter != 'exit':
         if pause == 0:
             continue
         setNum, enter, tm_temp = pause[0], pause[1], pause[2]
-        cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
-        rus = (cursor.fetchall())
-        cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
-        eng = (cursor.fetchall())
+        rus, eng = load_sentences()
     elif enter == 'clear mistakes':
-        clear_mistakes()
+        cursor1.execute("DELETE FROM albums")
+        cursor1.execute("VACUUM")
+        conn.commit()
         continue
     elif enter == 'update':
         text_cls()
@@ -133,10 +138,7 @@ while enter != 'exit':
         input()
         continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
-        cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
-        rus = (cursor.fetchall())
-        cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
-        eng = (cursor.fetchall())
+        rus, eng = load_sentences()
     else:
         continue
     if enter == 15:
