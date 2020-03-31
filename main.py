@@ -40,7 +40,7 @@ Present Simple
         """)
 
 
-def text_cls():
+def screen_cleaning():
     p = Popen(clear, shell=True)
     p.communicate(input=b"\n")
 
@@ -110,10 +110,10 @@ for num, i in enumerate(mistakes):
 added_practices = 20
 enter = ''
 while enter != 'exit':
-    text_cls()
+    screen_cleaning()
     print_text()
     enter = input("Введи номер практики: ")
-    text_cls()
+    screen_cleaning()
     flag = True
     if enter == 'mistakes':
         rus, eng = load_sentences()
@@ -132,17 +132,19 @@ while enter != 'exit':
         conn.commit()
         continue
     elif enter == 'update':
-        text_cls()
+        screen_cleaning()
         download_update.update_check()
-        download_update.update()
-        reload(download_update)
+        update_main, update_download = download_update.update()
+        if update_main:
+            try:
+                run(["python", "main.py"])
+            except:
+                Exception
+            exit()
+        if update_download:
+            reload(download_update)
         input()
-        try:
-            run(["python", "main.py"])
-        except:
-            Exception
-        exit()
-        # continue
+        continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
         rus, eng = load_sentences()
     else:

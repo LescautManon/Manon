@@ -27,10 +27,12 @@ def update_check():
 
 
 def update():
+    update_main = False
+    update_download = False
     counter_updates = 0
     if len(list_update) == 0:
         print("Возможно, нет подключения к интернету")
-        return
+        return update_main, update_download
     else:
         import re
     if list_update[0] > version_main:
@@ -45,6 +47,7 @@ def update():
         o.write(re.sub(f"version_main = {old_version}", f"version_main = {new_version}", data))
         o.close()
         counter_updates += 1
+        update_main = True
     if list_update[1] > version_database:
         url = 'https://github.com/LescautManon/Manon/raw/master/mydatabase.db'
         filename = "mydatabase.db"
@@ -69,7 +72,10 @@ def update():
         o.write(re.sub(f"version_download_update = {old_version}", f"version_download_update = {new_version}", data))
         o.close()
         counter_updates += 1
+        update_download = True
     if counter_updates == 0:
         print("Обновлений нет")
+        return update_main, update_download
     else:
         print("Обновление завершено")
+        return update_main, update_download
