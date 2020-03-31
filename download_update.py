@@ -21,9 +21,12 @@ def update_check():
     if (list_update[0] > version_main
         or list_update[1] > version_database
             or list_update[2] > version_download_update):
-        return "Для обновления введи 'update'"
+        no_updates = False
+        return no_updates
     else:
-        return ""
+        no_updates = True
+        print("Обновлений нет")
+        return no_updates
 
 
 def update():

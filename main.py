@@ -133,7 +133,10 @@ while enter != 'exit':
         continue
     elif enter == 'update':
         screen_cleaning()
-        download_update.update_check()
+        no_updates = download_update.update_check()
+        if no_updates:
+            input()
+            continue
         update_main, update_download = download_update.update()
         if update_main:
             try:
