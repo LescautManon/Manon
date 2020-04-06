@@ -12,7 +12,7 @@ import download_update
 
 def print_text():
     print("""\
-menu: mistakes, pause, clear mistakes, exit
+menu: mistakes, pause, clear mistakes, update, exit
 translate: time, show stat, pause, exit
 mistakes: - (for delete sentence)
 
