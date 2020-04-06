@@ -9,10 +9,14 @@ list_update = []
 
 
 def update_check():
+    no_update = True
+    no_internet = False
     try:
         check_version = urlopen("https://raw.githubusercontent.com/LescautManon/Manon/master/update.txt").read()
     except URLError:
-        return ""
+        no_internet = True
+        return no_update, no_internet
+        # return ""
     check_version = check_version.decode('utf-8')
     check_version = check_version.split("\n")
     for i in check_version:
@@ -22,11 +26,11 @@ def update_check():
         or list_update[1] > version_database
             or list_update[2] > version_download_update):
         no_updates = False
-        return no_updates
+        return no_updates, no_internet
     else:
         no_updates = True
         print("Обновлений нет")
-        return no_updates
+        return no_updates, no_internet
 
 
 def update():

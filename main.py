@@ -133,7 +133,11 @@ while enter != 'exit':
         continue
     elif enter == 'update':
         screen_cleaning()
-        no_updates = download_update.update_check()
+        no_updates, no_internet = download_update.update_check()
+        if no_internet:
+            print("Возможно, нет подключения к интернету")
+            input()
+            continue
         if no_updates:
             input()
             continue
