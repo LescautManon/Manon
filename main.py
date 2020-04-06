@@ -138,6 +138,7 @@ while enter != 'exit':
             input()
             continue
         update_main, update_download = download_update.update()
+        input()
         if update_main:
             try:
                 run(["python", "main.py"])
