@@ -134,10 +134,7 @@ while enter != 'exit':
     elif enter == 'update':
         screen_cleaning()
         no_updates, no_internet = download_update.update_check()
-        if no_internet:
-            input()
-            continue
-        if no_updates:
+        if no_internet or no_updates:
             input()
             continue
         update_main, update_download = download_update.update()
