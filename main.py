@@ -22,8 +22,8 @@ Present Simple
 2. I, We, You, They + verb.
 3. I, We, You, They + verb.
 4. I, We, You, They + verb. He/She/It + verb + s.
-5. I, We, You, They + verb.(5.1, 5.2, 5.3).
-6. Want.(6).
+5. I, We, You, They + verb. (5.1, 5.2, 5.3)
+6. Want. (6)
 7. I like + ...
 8. Negative form. I, We, You, They + don't + verb.
 9. I, We, You, They + don't + verb. He, She, It + doesn't + verb.
@@ -32,7 +32,7 @@ Present Simple
 12. Questions. I, We, You, They. (14)
 13. Questions. He, She, It. (15)
 14. Questions. (16)
-15. + / - / ?  (17)
+15. + / - / ? (17)
 16. Special Question. (18.1, 18.2)
 17. Special Question. (19.1, 19.2)
 18. Special Question. (20)
