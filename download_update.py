@@ -5,7 +5,7 @@ from urllib.error import URLError
 version_main = 10
 version_database = 2
 version_download_update = 3
-# version_input_wait = 1
+version_input_wait = 1
 list_update = []
 
 
