@@ -8,6 +8,7 @@ from subprocess import Popen
 from json import load, dump
 from os.path import exists
 import download_update
+import input_wait
 
 
 def print_text():
@@ -187,7 +188,12 @@ while enter != 'exit':
         num = setNum[0]
         print(len(setNum), end=". ")
         print(rus[num], end=" ")
-        translate = input()
+        # translate = input()
+        input_wait.prompt = str(len(setNum)) + ". " + str(rus[num]) + " "
+        translate = input_wait.timed_input("")
+        print()
+        if str(type(translate)) == "<class 'NoneType'>":
+            translate = ""
         if translate == "pause":
             pause = list(range(0, 3))
             tm_temp = (time() - tic) + tm_temp

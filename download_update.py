@@ -5,6 +5,7 @@ from urllib.error import URLError
 version_main = 10
 version_database = 2
 version_download_update = 3
+version_input_wait = 1
 list_update = []
 
 
@@ -24,7 +25,8 @@ def update_check():
             list_update.append(int(i))
     if (list_update[0] > version_main
         or list_update[1] > version_database
-            or list_update[2] > version_download_update):
+            or list_update[2] > version_download_update
+                or list_update[3] > version_input_wait):
         no_updates = False
         return no_updates, no_internet
     else:
@@ -77,6 +79,19 @@ def update():
         data = open('download_update.py').read()
         o = open('download_update.py', 'w')
         o.write(re.sub(f"version_download_update = {old_version}", f"version_download_update = {new_version}", data))
+        o.close()
+        counter_updates += 1
+        update_download = True
+    if list_update[3] > version_input_wait:
+        url = 'https://raw.githubusercontent.com/LescautManon/Manon/master/input_wait.py'
+        filename = "input_wait.py"
+        urlretrieve(url, filename)
+        print('update input_wait.py OK')
+        old_version = version_input_wait
+        new_version = list_update[3]
+        data = open('download_update.py').read()
+        o = open('download_update.py', 'w')
+        o.write(re.sub(f"version_input_wait = {old_version}", f"version_input_wait = {new_version}", data))
         o.close()
         counter_updates += 1
         update_download = True
