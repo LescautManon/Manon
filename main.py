@@ -154,7 +154,7 @@ while enter != 'exit':
         rus, eng = load_sentences()
     else:
         continue
-    if enter == 15:
+    if enter == '15' and flag:
         setNum = [i for i in range(0, len(rus))]
         am = [[0] * 3 for i in range(int(len(setNum) / 3))]
         m = 0
@@ -172,12 +172,13 @@ while enter != 'exit':
         setNum = []
         for i in am:
             setNum.extend(i)
+        tm_temp = 0
     else:
-        rus, eng = normalize_list(rus, eng)
         if flag:
             setNum = [i for i in range(0, len(rus))]
             shuffle(setNum)
             tm_temp = 0
+    rus, eng = normalize_list(rus, eng)
     tic = time()
     list_mistakes = []
     percent_mistakes_temp = 0
