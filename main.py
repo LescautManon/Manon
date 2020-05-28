@@ -16,7 +16,7 @@ def print_text():
 menu: mistakes, pause, clear mistakes, update, exit
 translate: time, show stat, pause, exit
 mistakes: - (for delete sentence)
-Random {random} (for change enter "rand on / rand off")
+random {random} (for change enter "rand on / rand off")
 
 Present Simple
 1. Subject + verb.
