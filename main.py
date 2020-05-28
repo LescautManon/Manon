@@ -16,7 +16,7 @@ def print_text():
 menu: mistakes, pause, clear mistakes, update, exit
 translate: time, show stat, pause, exit
 mistakes: - (for delete sentence)
-Random: {random} (for change enter "rand on / rand off")
+Random {random} (for change enter "rand on / rand off")
 
 Present Simple
 1. Subject + verb.
@@ -109,7 +109,7 @@ cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
 mistakes = (cursor1.fetchall())
 for num, i in enumerate(mistakes):
     mistakes[num] = mistakes[num][0]
-random = True
+random = "on"
 added_practices = 20
 enter = ''
 while enter != 'exit':
@@ -153,10 +153,10 @@ while enter != 'exit':
         input()
         continue
     elif enter == 'rand off':
-        random = False
+        random = "off"
         continue
     elif enter == 'rand on':
-        random = True
+        random = "on"
         continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
         rus, eng = load_sentences()
@@ -176,7 +176,7 @@ while enter != 'exit':
             else:
                 k = 0
                 m += 1
-        if random:
+        if random == "on":
             shuffle(am)
         setNum = []
         for i in am:
@@ -185,7 +185,7 @@ while enter != 'exit':
     else:
         if flag:
             setNum = [i for i in range(0, len(rus))]
-            if random:
+            if random == "on":
                 shuffle(setNum)
             tm_temp = 0
     rus, eng = normalize_list(rus, eng)
