@@ -12,10 +12,11 @@ import download_update
 
 
 def print_text():
-    print("""\
+    print(f"""\
 menu: mistakes, pause, clear mistakes, update, exit
 translate: time, show stat, pause, exit
 mistakes: - (for delete sentence)
+Random: {random} (for change enter "rand on / rand off")
 
 Present Simple
 1. Subject + verb.
@@ -108,12 +109,13 @@ cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
 mistakes = (cursor1.fetchall())
 for num, i in enumerate(mistakes):
     mistakes[num] = mistakes[num][0]
+random = True
 added_practices = 20
 enter = ''
 while enter != 'exit':
     screen_cleaning()
     print_text()
-    enter = input("Введи номер практики: ")
+    enter = input("Введи номер практики или команду: ")
     screen_cleaning()
     flag = True
     if enter == 'mistakes':
@@ -150,6 +152,12 @@ while enter != 'exit':
             reload(download_update)
         input()
         continue
+    elif enter == 'rand off':
+        random = False
+        continue
+    elif enter == 'rand on':
+        random = True
+        continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
         rus, eng = load_sentences()
     else:
@@ -168,7 +176,8 @@ while enter != 'exit':
             else:
                 k = 0
                 m += 1
-        shuffle(am)
+        if random:
+            shuffle(am)
         setNum = []
         for i in am:
             setNum.extend(i)
@@ -176,7 +185,8 @@ while enter != 'exit':
     else:
         if flag:
             setNum = [i for i in range(0, len(rus))]
-            shuffle(setNum)
+            if random:
+                shuffle(setNum)
             tm_temp = 0
     rus, eng = normalize_list(rus, eng)
     tic = time()
