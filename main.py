@@ -83,6 +83,7 @@ def normalize_list(rus_, eng_):
 
 def show_stat():
     tm_ = (time() - tic) + tm_temp
+    print("\n", f"Practice {enter}", sep="")
     print("\n", " " * 1, int(tm_ / 60), " min ", round(tm_ % 60), " sec", sep="")
     print(" " * 1, f"{correctly_sentence} correctly / ", end="")
     print(f"{percent_mistakes_temp} mist / {pass_sentence} pass / {percent_mistakes} total")
