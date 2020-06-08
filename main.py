@@ -13,7 +13,7 @@ import download_update
 
 def print_text():
     print(f"""\
-menu: mistakes, pause, clear mistakes, update, exit
+menu: mistakes, pause, del pause, clear mistakes, update, exit
 translate: time, show stat, pause, exit
 mistakes: - (for delete sentence)
 random {random} (for change enter "rand on / rand off")
@@ -159,6 +159,15 @@ while enter != 'exit':
     elif enter == 'rand on':
         random = "on"
         continue
+    elif enter == 'del pause':
+        if system() == "Windows":
+            p = Popen("del pause.txt", shell=True)
+            p.communicate(input=b"\n")
+            continue
+        else:
+            p = Popen("rm pause.txt", shell=True)
+            p.communicate(input=b"\n")
+            continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
         rus, eng = load_sentences()
     else:
