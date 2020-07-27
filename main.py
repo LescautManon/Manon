@@ -65,14 +65,22 @@ def load_sentences():
         rus_ = (cursor1.fetchall())
         cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
         eng_ = (cursor1.fetchall())
-        return rus_, eng_
+        mistakes = load_mistakes()
+        return rus_, eng_, mistakes
     else:
         cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
         rus_ = (cursor.fetchall())
         cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
-        eng_ = (cursor.fetchall())
-        return rus_, eng_
+        eng_ = (cursor.fetchall()) 
+        mistakes = load_mistakes()       
+        return rus_, eng_, mistakes
 
+def load_mistakes():
+        cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
+        mistakes = (cursor1.fetchall())
+        for num, i in enumerate(mistakes):
+            mistakes[num] = mistakes[num][0]
+        return mistakes
 
 def normalize_list(rus_, eng_):
     for u, i_ in enumerate(rus_):
@@ -106,11 +114,7 @@ conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 conn1 = sqlite3.connect("mistakes.db", isolation_level=None)
 cursor1 = conn1.cursor()
-cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
-mistakes = (cursor1.fetchall())
-for num, i in enumerate(mistakes):
-    mistakes[num] = mistakes[num][0]
-random = "on"
+random = "off"
 added_practices = 20
 enter = ''
 while enter != 'exit':
@@ -120,7 +124,7 @@ while enter != 'exit':
     screen_cleaning()
     flag = True
     if enter == 'mistakes':
-        rus, eng = load_sentences()
+        rus, eng, mistakes = load_sentences()
         if len(rus) == 0:
             continue
     elif enter == 'pause':
@@ -129,7 +133,7 @@ while enter != 'exit':
         if pause == 0:
             continue
         setNum, enter, tm_temp = pause[0], pause[1], pause[2]
-        rus, eng = load_sentences()
+        rus, eng, mistakes = load_sentences()
     elif enter == 'clear mistakes':
         cursor1.execute("DELETE FROM albums")
         cursor1.execute("VACUUM")
@@ -169,7 +173,7 @@ while enter != 'exit':
             p.communicate(input=b"\n")
             continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
-        rus, eng = load_sentences()
+        rus, eng, mistakes = load_sentences()
     else:
         continue
     if enter == '15' and flag:
