@@ -1,12 +1,13 @@
 import sqlite3
+from platform import system
+from subprocess import Popen
+from os.path import exists
+from json import load, dump
+from itertools import chain
+from random import shuffle
+from time import time
 from subprocess import run
 from importlib import reload
-from platform import system
-from time import time
-from random import shuffle
-from subprocess import Popen
-from json import load, dump
-from os.path import exists
 import download_update
 # import input_wait
 
@@ -50,30 +51,26 @@ def screen_cleaning():
 def read_pause():
     pause_ = 0
     if exists('pause.txt'):
-        with open('pause.txt', 'a+') as f:
-            f.seek(0)
-            try:
-                return load(f)
-            except ValueError:
-                pass
+        with open('pause.txt', 'r') as f:
+            return load(f)
     return pause_
 
 
 def load_sentences():
     if enter == 'mistakes':
         cursor1.execute("SELECT rus FROM albums WHERE num_practice='0' ")
-        rus_ = (cursor1.fetchall())
+        russian_sentences_ = (cursor1.fetchall())
         cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
-        eng_ = (cursor1.fetchall())
+        english_sentences_ = (cursor1.fetchall())
         mistakes = load_mistakes()
-        return rus_, eng_, mistakes
+        return russian_sentences_, english_sentences_, mistakes
     else:
         cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
-        rus_ = (cursor.fetchall())
+        russian_sentences_ = (cursor.fetchall())
         cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
-        eng_ = (cursor.fetchall()) 
+        english_sentences_ = (cursor.fetchall()) 
         mistakes = load_mistakes()       
-        return rus_, eng_, mistakes
+        return russian_sentences_, english_sentences_, mistakes
 
 def load_mistakes():
         cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
@@ -82,11 +79,11 @@ def load_mistakes():
             mistakes[num] = mistakes[num][0]
         return mistakes
 
-def normalize_list(rus_, eng_):
-    for u, i_ in enumerate(rus_):
-        rus_[u] = rus_[u][0]
-        eng_[u] = eng_[u][0]
-    return rus_, eng_
+def normalize_list(russian_sentences_, english_sentences_):
+    for u, i_ in enumerate(russian_sentences_):
+        russian_sentences_[u] = russian_sentences_[u][0]
+        english_sentences_[u] = english_sentences_[u][0]
+    return russian_sentences_, english_sentences_
 
 
 def show_stat():
@@ -122,18 +119,18 @@ while enter != 'exit':
     print_text()
     enter = input("Введи номер практики или команду: ")
     screen_cleaning()
-    flag = True
+    pause_is_not_used = True
     if enter == 'mistakes':
-        rus, eng, mistakes = load_sentences()
-        if len(rus) == 0:
+        russian_sentences, english_sentences, mistakes = load_sentences()
+        if len(russian_sentences) == 0:
             continue
     elif enter == 'pause':
-        flag = False
+        pause_is_not_used = False
         pause = read_pause()
         if pause == 0:
             continue
         setNum, enter, tm_temp = pause[0], pause[1], pause[2]
-        rus, eng, mistakes = load_sentences()
+        russian_sentences, english_sentences, mistakes = load_sentences()
     elif enter == 'clear mistakes':
         cursor1.execute("DELETE FROM albums")
         cursor1.execute("VACUUM")
@@ -173,36 +170,24 @@ while enter != 'exit':
             p.communicate(input=b"\n")
             continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
-        rus, eng, mistakes = load_sentences()
+        russian_sentences, english_sentences, mistakes = load_sentences()
     else:
         continue
-    if enter == '15' and flag:
-        setNum = [i for i in range(0, len(rus))]
-        am = [[0] * 3 for i in range(int(len(setNum) / 3))]
-        m = 0
-        k = 0
-        t = 0
-        while m < len(setNum) / 3:
-            if k < 3:
-                am[m][k] = setNum[t]
-                k += 1
-                t += 1
-            else:
-                k = 0
-                m += 1
+    if enter == '15' and pause_is_not_used:
+        if random == "off":
+            setNum = [x for x in range(0, len(russian_sentences))]
         if random == "on":
-            shuffle(am)
-        setNum = []
-        for i in am:
-            setNum.extend(i)
+            setNum = [[x for x in range(i, i+3)] for i in range(0, len(russian_sentences), 3)]
+            shuffle(setNum)
+            setNum = list(chain(*setNum))        
         tm_temp = 0
     else:
-        if flag:
-            setNum = [i for i in range(0, len(rus))]
+        if pause_is_not_used:
+            setNum = [i for i in range(0, len(russian_sentences))]
             if random == "on":
                 shuffle(setNum)
-            tm_temp = 0
-    rus, eng = normalize_list(rus, eng)
+            tm_temp = 0      
+    russian_sentences, english_sentences = normalize_list(russian_sentences, english_sentences)
     tic = time()
     list_mistakes = []
     percent_mistakes_temp = 0
@@ -212,9 +197,9 @@ while enter != 'exit':
     while setNum:
         num = setNum[0]
         print(len(setNum), end=". ")
-        print(rus[num], end=" ")
+        print(russian_sentences[num], end=" ")
         translate = input()
-        # input_wait.prompt = str(len(setNum)) + ". " + str(rus[num]) + " "
+        # input_wait.prompt = str(len(setNum)) + ". " + str(russian_sentences[num]) + " "
         # translate = input_wait.timed_input("")
         # print()
         # if str(type(translate)) == "<class 'NoneType'>":
@@ -227,7 +212,7 @@ while enter != 'exit':
                 dump(pause, file)
             break
         if translate == "-" and enter == "mistakes":
-            cursor1.execute("DELETE FROM albums WHERE eng = ?", (eng[num],))
+            cursor1.execute("DELETE FROM albums WHERE eng = ?", (english_sentences[num],))
             conn1.commit()
             setNum.remove(num)
             continue
@@ -236,7 +221,7 @@ while enter != 'exit':
             print(" ", int(tm / 60), " min ", round(tm % 60), " sec", sep="")
             continue
         if translate == "":
-            print(eng[num])
+            print(english_sentences[num])
             pass_sentence += 1
             setNum.remove(num)
             continue
@@ -249,22 +234,22 @@ while enter != 'exit':
         if not translate[0].istitle() or translate[-1] != ".":
             if not translate[0].istitle():
                 translate = translate[0].upper() + translate[1:]
-            if translate[-1] != "." and eng[num][-1] == ".":
+            if translate[-1] != "." and english_sentences[num][-1] == ".":
                 translate = translate + "."
-            if translate[-1] != "?" and eng[num][-1] == "?":
+            if translate[-1] != "?" and english_sentences[num][-1] == "?":
                 translate = translate + "?"
-        if translate == eng[num]:
+        if translate == english_sentences[num]:
             correctly_sentence += 1
-        if translate != eng[num]:
-            print(eng[num])
-            if eng[num] not in mistakes and len(translate) != 0:
-                temp = tuple([tuple([0]) + tuple([rus[num]]) + tuple([eng[num]])])
+        if translate != english_sentences[num]:
+            print(english_sentences[num])
+            if english_sentences[num] not in mistakes and len(translate) != 0:
+                temp = tuple([tuple([0]) + tuple([russian_sentences[num]]) + tuple([english_sentences[num]])])
                 cursor1.executemany("INSERT INTO albums VALUES (?,?,?)", temp)
                 conn1.commit()
             list_mistakes.append(len(setNum))
-            list_mistakes.append(rus[num])
+            list_mistakes.append(russian_sentences[num])
             list_mistakes.append(translate)
-            list_mistakes.append(eng[num])
+            list_mistakes.append(english_sentences[num])
             percent_mistakes_temp += 1
         setNum.remove(num)
     if len(setNum) == 0:
