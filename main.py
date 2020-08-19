@@ -14,10 +14,10 @@ import download_update
 
 def print_text():
     print(f"""\
-menu: mistakes, pause, del pause, clear mistakes, update, exit
-translate: time, show stat, pause, exit
+menu: 1)mistakes({numberMistakes}), 2)pause({pEx}), 3)del pause, 4)clear mistakes, 5)update, 6)exit(q)
+translate: 1)time, 2)show stat, 3)pause, 4)exit(q)
 mistakes: - (for delete sentence)
-random {random} (for change enter "rand on / rand off")
+random {random} (for change enter "r+ / r-")
 
 Present Simple
 1. Subject + verb.
@@ -72,12 +72,14 @@ def load_sentences():
         mistakes = load_mistakes()       
         return russian_sentences_, english_sentences_, mistakes
 
+
 def load_mistakes():
         cursor1.execute("SELECT eng FROM albums WHERE num_practice='0' ")
         mistakes = (cursor1.fetchall())
         for num, i in enumerate(mistakes):
             mistakes[num] = mistakes[num][0]
         return mistakes
+
 
 def normalize_list(russian_sentences_, english_sentences_):
     for u, i_ in enumerate(russian_sentences_):
@@ -103,6 +105,27 @@ def show_stat():
             print(list_mistakes[i_ + 3])
 
 
+def numMist():
+    global enter
+    enter = 'mistakes'
+    rus, eng, mistakes = load_sentences()
+    global numberMistakes
+    numberMistakes = len(mistakes)
+    enter = ''
+
+
+def pauseExists():
+    pauseExists = read_pause()
+    if pauseExists != 0:
+        pauseExists = True
+    global pEx
+    if pauseExists == True:
+        pEx = "exists"
+    else:
+        pEx = "none"
+
+
+
 if system() == "Windows":
     clear = "cls"
 else:
@@ -114,29 +137,36 @@ cursor1 = conn1.cursor()
 random = "off"
 added_practices = 20
 enter = ''
-while enter != 'exit':
+exitEnterMenu = ['exit', 'q', ' 6']
+while (not enter in exitEnterMenu):
+    numMist()
+    pauseExists()
     screen_cleaning()
     print_text()
     enter = input("Введи номер практики или команду: ")
     screen_cleaning()
     pause_is_not_used = True
-    if enter == 'mistakes':
+    if enter == 'mistakes' or enter == " 1":
+        enter = 'mistakes'
         russian_sentences, english_sentences, mistakes = load_sentences()
         if len(russian_sentences) == 0:
             continue
-    elif enter == 'pause':
+    elif enter == 'pause' or enter == " 2":
+        enter = 'pause'
         pause_is_not_used = False
         pause = read_pause()
         if pause == 0:
             continue
         setNum, enter, tm_temp = pause[0], pause[1], pause[2]
         russian_sentences, english_sentences, mistakes = load_sentences()
-    elif enter == 'clear mistakes':
+    elif enter == 'clear mistakes' or enter == " 4":
+        enter = 'clear mistakes'
         cursor1.execute("DELETE FROM albums")
         cursor1.execute("VACUUM")
         conn.commit()
         continue
-    elif enter == 'update':
+    elif enter == 'update' or enter == " 5":
+        enter == 'update'
         screen_cleaning()
         no_updates, no_internet = download_update.update_check()
         if no_internet or no_updates:
@@ -154,13 +184,13 @@ while enter != 'exit':
             reload(download_update)
         input()
         continue
-    elif enter == 'rand off':
+    elif enter == 'r-':
         random = "off"
         continue
-    elif enter == 'rand on':
+    elif enter == 'r+':
         random = "on"
         continue
-    elif enter == 'del pause':
+    elif enter == 'del pause' or enter == ' 3':
         if system() == "Windows":
             p = Popen("del pause.txt", shell=True)
             p.communicate(input=b"\n")
@@ -204,7 +234,10 @@ while enter != 'exit':
         # print()
         # if str(type(translate)) == "<class 'NoneType'>":
         #     translate = ""
-        if translate == "pause":
+        if translate == "?":
+            print('1)time, 2)show stat, 3)pause, 4)exit(q)')
+            continue
+        if translate == "pause" or translate == " 3":
             pause = list(range(0, 3))
             tm_temp = (time() - tic) + tm_temp
             pause[0], pause[1], pause[2] = setNum, enter, tm_temp
@@ -216,7 +249,7 @@ while enter != 'exit':
             conn1.commit()
             setNum.remove(num)
             continue
-        if translate == "time":
+        if translate == "time" or translate == " 1":
             tm = (time() - tic) + tm_temp
             print(" ", int(tm / 60), " min ", round(tm % 60), " sec", sep="")
             continue
@@ -225,11 +258,11 @@ while enter != 'exit':
             pass_sentence += 1
             setNum.remove(num)
             continue
-        if translate == "show stat":
+        if translate == "show stat" or translate == " 2":
             show_stat()
             print()
             continue
-        if translate == "exit":
+        if translate == "exit" or translate == "q" or translate == " 4":
             break
         if not translate[0].istitle() or translate[-1] != ".":
             if not translate[0].istitle():
