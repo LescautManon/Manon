@@ -2,8 +2,8 @@ from urllib.request import urlretrieve
 from urllib.request import urlopen
 from urllib.error import URLError
 
-version_main = 12
-version_database = 2
+version_main = 14
+version_database = 3
 version_download_update = 3
 version_input_wait = 1
 list_update = []
@@ -16,7 +16,7 @@ def update_check():
         check_version = urlopen("https://raw.githubusercontent.com/LescautManon/Manon/master/update.txt").read()
     except URLError:
         no_internet = True
-        print("Возможно, нет подключения к интернету")
+        print("Нет подключения к интернету")
         return no_updates, no_internet
     check_version = check_version.decode('utf-8')
     check_version = check_version.split("\n")
@@ -40,7 +40,7 @@ def update():
     update_download = False
     counter_updates = 0
     if len(list_update) == 0:
-        print("Возможно, нет подключения к интернету")
+        print("Нет подключения к интернету")
         return update_main, update_download
     else:
         import re
@@ -99,5 +99,5 @@ def update():
         print("Обновлений нет")
         return update_main, update_download
     else:
-        print("Обновление завершено")
+        print("Обновление завершено. Для продолжения нажми enter")
         return update_main, update_download
