@@ -3,8 +3,8 @@ from urllib.request import urlopen
 from urllib.error import URLError
 
 version_main = 14
-version_database = 3
-version_download_update = 3
+version_database = 4
+version_download_update = 4
 version_input_wait = 1
 list_update = []
 
