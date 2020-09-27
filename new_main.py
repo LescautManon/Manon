@@ -17,7 +17,6 @@ def showCommandMenu():
     strmenu = f"""\
 menu: 1)mistakes({numberMistakes}), 2)pause({pEx}), 3)del pause, 4)clear mistakes, 5)update, 6)exit(q)
 translate: 1)time, 2)show stat, 3)pause, 4)exit(q)
-mistakes: - (for delete sentence)
 random {random} (for change enter "r+ / r-")
 """
     return strmenu
