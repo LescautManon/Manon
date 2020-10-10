@@ -240,6 +240,7 @@ while (not enter in exitEnterMenu):
         else:
             p = Popen("rm pause.txt", shell=True)
             p.communicate(input=b"\n")
+            continue
     elif enter == '?':
         if commandMenu == 0:
             commandMenu = 1
