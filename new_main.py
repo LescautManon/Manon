@@ -45,7 +45,8 @@ Present Simple
 18. Special Question. (20)
 19. Questions. (21.1, 21.2)
 20. Words (25) *
-        """)
+21. Theory/Теория     """)
+
 
 
 def screen_cleaning():
@@ -166,6 +167,60 @@ while (not enter in exitEnterMenu):
         enter = input("Введи номер практики или команду: ")
     screen_cleaning()
     pause_is_not_used = True
+    if (enter == '21') or (enter == 'Theory') or (enter == 'Теория'):
+        print('''
+|    |     ед число    |     мн число    |
+|----|-----------------|-----------------|
+|1 л.|      I + v      |     We + v      |
+|----|-----------------|-----------------|
+|2 л.|     You + v     |     You + v     |
+|----|-----------------|-----------------|
+|3 л.|He,She,It + (v+s)|    They + v     |
+|----|-----------------|-----------------|
+Примеры:
+    1. I run every morning – Я бегаю каждое утро.
+    2. He passes my messages. – Он передает мои сообщения.
+                ''')
+        print('''
+|    |       ед число         |         мн число       |
+|----|------------------------|------------------------|
+|1 л.|     I + do not + v     |     We + do not + v    |
+|----|------------------------|------------------------|
+|2 л.|    You + do not + v    |     You + do not + v   |
+|----|------------------------|------------------------|
+|3 л.|He,She,It + does not + v|   They + do not + v    |
+|----|------------------------|------------------------|
+Примеры:
+    1. I don’t like your boss – Мне не нравится твой начальник.
+    2. She doesn’t work as a waitress – Она не работает официанткой.
+                        ''')
+        print('''
+|    |      ед число      |      мн число      |
+|----|--------------------|--------------------|
+|1 л.|     Do + I + v     |    Do + we + v     |
+|----|--------------------|--------------------|
+|2 л.|    Do + you + v    |    Do + you + v    |
+|----|--------------------|--------------------|
+|3 л.|Does + he,she,it + v|    Do + they + v   |
+|----|--------------------|--------------------|
+Примеры:
+    1. Do you like your job? – Тебе нравится твоя работа?
+    2. Does Anna dance? – Анна танцует? (не в данный момент, а вообще)
+                        ''')
+        print('''
+Present Simple используется:
+1. Действие в широком смысле, не только в момент речи, а вообще.
+    I like flowers. – Мне нравятся цветы.
+    I remember this song. – Я помню эту песню.
+2. Действие, происходящее регулярно, время от времени.
+    I eat vegetables every day. – Я ем овощи каждый день.
+    I eat vegetables. – Я ем овощи (вообще, не в данный момент).
+3. Действие, запланированное на будущее
+    The plane takes off at 9:30. – Самолет отправляется в 9:30 (отправление запланировано на будущее).
+4. Будущее действие в придаточных предложениях условия и времени.
+    If he believes me, I will feel much better. – Если он поверит мне, я почувствую себя намного лучше.
+                ''')
+        print(input())
     if enter == 'mistakes' or enter == " 1":
         con = False
         while(True):
@@ -264,7 +319,7 @@ while (not enter in exitEnterMenu):
             setNum = [i for i in range(0, len(russian_sentences))]
             if random == "on":
                 shuffle(setNum)
-            tm_temp = 0      
+            tm_temp = 0
     russian_sentences, english_sentences = normalize_list(russian_sentences, english_sentences)
     tic = time()
     list_mistakes = []
