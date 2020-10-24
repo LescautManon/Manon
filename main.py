@@ -12,13 +12,18 @@ import download_update
 import input_wait
 
 
-def print_text():
-    print(f"""\
+def showCommandMenu():
+    strmenu = f"""\
 menu: 1)mistakes({numberMistakes}), 2)pause({pEx}), 3)del pause, 4)clear mistakes, 5)update, 6)exit(q)
 translate: 1)time, 2)show stat, 3)pause, 4)exit(q)
 mistakes: - (for delete sentence)
 random {random} (for change enter "r+ / r-")
+"""
+    return strmenu
 
+
+def print_text():
+    print(f"""{showCommandMenu() if commandMenu == 1 else ""}
 Present Simple
 1. Subject + verb.
 2. I, We, You, They + verb.
@@ -125,7 +130,6 @@ def pauseExists():
         pEx = "none"
 
 
-
 if system() == "Windows":
     clear = "cls"
 else:
@@ -134,6 +138,7 @@ conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 conn1 = sqlite3.connect("mistakes.db", isolation_level=None)
 cursor1 = conn1.cursor()
+commandMenu = 0
 random = "off"
 added_practices = 20
 enter = ''
@@ -198,7 +203,12 @@ while (not enter in exitEnterMenu):
         else:
             p = Popen("rm pause.txt", shell=True)
             p.communicate(input=b"\n")
-            continue
+    elif enter == '?':
+        if commandMenu == 0:
+            commandMenu = 1
+        else:
+            commandMenu = 0
+        continue
     elif enter.isdigit() and added_practices >= int(enter) > 0:
         russian_sentences, english_sentences, mistakes = load_sentences()
     else:
@@ -233,7 +243,7 @@ while (not enter in exitEnterMenu):
         translate = input_wait.timed_input("")
         print()
         if str(type(translate)) == "<class 'NoneType'>":
-             translate = ""
+            translate = ""
         if translate == "?":
             print('1)time, 2)show stat, 3)pause, 4)exit(q)')
             continue
