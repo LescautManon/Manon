@@ -9,7 +9,7 @@ from time import time
 from subprocess import run
 from importlib import reload
 import download_update
-# import input_wait
+import input_wait
 
 
 def print_text():
@@ -228,12 +228,12 @@ while (not enter in exitEnterMenu):
         num = setNum[0]
         print(len(setNum), end=". ")
         print(russian_sentences[num], end=" ")
-        translate = input()
-        # input_wait.prompt = str(len(setNum)) + ". " + str(russian_sentences[num]) + " "
-        # translate = input_wait.timed_input("")
-        # print()
-        # if str(type(translate)) == "<class 'NoneType'>":
-        #     translate = ""
+        # translate = input()
+        input_wait.prompt = str(len(setNum)) + ". " + str(russian_sentences[num]) + " "
+        translate = input_wait.timed_input("")
+        print()
+        if str(type(translate)) == "<class 'NoneType'>":
+             translate = ""
         if translate == "?":
             print('1)time, 2)show stat, 3)pause, 4)exit(q)')
             continue
