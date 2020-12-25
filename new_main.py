@@ -30,6 +30,7 @@ Present Simple
 3. I, We, You, They + verb. (3)
 4. I, We, You, They + verb. He/She/It + verb + s. (4)
 5. I, We, You, They + verb. (5.1 - 5.3)
+5.1 Предложения из теста 5, которые не встречаются в предыдущих практиках.
 6. Want. (6)
 7. I like + ... (7)
 8. Negative form. I, We, You, They + don't + verb. (8)
@@ -182,14 +183,14 @@ commandMenu = 0
 random = "off"
 added_practices = 36
 num_added_practices = [str(x) for x in range(1, added_practices+1)]
-for_push_NAP = [11.1, 21.1, 33.1, 36.1]
+for_push_NAP = [5.1, 11.1, 21.1, 33.1, 36.1]
 for i in for_push_NAP:
     num_added_practices.append(str(i))
 enter = ''
 exitEnterMenu = ['exit', 'q', ' 6']
 returnMistakes = False
-XforLoadPause = ''
 while not enter in exitEnterMenu:
+    XforLoadPause = ''
     numMist()
     pauseExists()
     if returnMistakes:
@@ -232,8 +233,6 @@ while not enter in exitEnterMenu:
         pause = read_pause()
         if pause == 0:
             continue
-        # setNum, enter, tm_temp, now = pause[0], pause[1], pause[2], pause[3]
-        # russian_sentences, english_sentences = load_sentences()
         setNum, enter, tm_temp, now, XforLoadPause = pause[0], pause[1], pause[2], pause[3], pause[4]
         russian_sentences, english_sentences = load_sentences(enter, XforLoadPause)
         mistakes = mistakesForPause(now)
@@ -266,7 +265,6 @@ while not enter in exitEnterMenu:
                     continue
         if answer == "n" or answer == "N" or answer == 'y' or answer == 'Y' or answer == "":
             continue
-
         cursor1.execute("DELETE FROM albums")
         cursor1.execute("VACUUM")
         conn.commit()
@@ -357,7 +355,6 @@ while not enter in exitEnterMenu:
         if translate == "pause" or translate == " 3":
             pause = list(range(0, 5))
             tm_temp = (time() - tic) + tm_temp
-            # pause[0], pause[1], pause[2], pause[3] = setNum, enter, tm_temp, now
             pause[0], pause[1], pause[2], pause[3], pause[4] = setNum, enter, tm_temp, now, XforLoadPause
             with open('pause.txt', 'w') as file:
                 dump(pause, file)
