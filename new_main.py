@@ -13,6 +13,14 @@ import datetime
 # import input_wait
 
 
+def print_Tense():
+    print("""
+    1. Present Simple
+    2. Future Simple
+    3. Past Simple
+    """)
+
+
 def showCommandMenu():
     strmenu = f"""\
 menu: 1)mistakes({numberMistakes}), 2)pause({pEx}), 3)del pause, 4)clear mistakes, 5)update, 6)exit(q)
@@ -67,6 +75,31 @@ Present Simple
 36. Test. (39.1 - 48.4)
 36.1 Предложения из теста 36, которые не встречаются в предыдущих практиках.
         """)
+
+
+def print_FutureSimple():
+    print(f"""{showCommandMenu() if commandMenu == 1 else ""}
+Future Simple
+1. Pronous + will ('ll) + verb (49)
+2. More difficult. (50)
+3. Negative form. (51)
+4. More difficult. (52)
+5. Question. (53)
+6. More difficult. (54)
+7. Special Question. (55)
+8. More difficult. (56)
+9. + / - / ? (58)
+10. Повторение. Упражнение. Special Question. (59)
+11. Повторение. Prepositions. (60)
+12. Повторение. Preposition + noun. (61)
+13. Повторение. Диктант слов. (62, 63)
+14. Test. (57.1 - 63.5)
+""")
+
+
+def digit_conversion_for_2(enter):
+    dict_digit = {"1": "37", "2": "38", "3": "39", "4": "40", "5": "41", "6": "42", "7": "43", "8": "44", "9": "45", "10": "46", "11": "47", "12": "48", "13": "49", "14": "50" }
+    return dict_digit[enter]
 
 
 def screen_cleaning():
@@ -186,21 +219,46 @@ num_added_practices = [str(x) for x in range(1, added_practices+1)]
 for_push_NAP = [5.1, 11.1, 21.1, 33.1, 36.1]
 for i in for_push_NAP:
     num_added_practices.append(str(i))
+added_practices = 14
+num_added_practices2 = []
+num_added_practices2 = [str(x) for x in range(1, added_practices+1)]
+for_push_NAP = []
+for i in for_push_NAP:
+    num_added_practices2.append(str(i))
+enter_Time = ''
 enter = ''
 exitEnterMenu = ['exit', 'q', ' 6']
 returnMistakes = False
-while not enter in exitEnterMenu:
+while True: # цикл прервется при вводе q
     XforLoadPause = ''
     numMist()
     pauseExists()
+    screen_cleaning()
+    print_Tense()
+    if enter_Time == "":
+        enter_Time = input("Введи номер: ")
+    if enter_Time  == "q":
+        break
+    if enter_Time.isdigit() and int(enter_Time) < 3:
+        if enter_Time == "1":
+            screen_cleaning()
+            print_text()
+        if enter_Time == "2":
+            screen_cleaning()
+            print_FutureSimple()
+    else:
+        enter_Time = ''
+        continue
     if returnMistakes:
         enter = "mistakes"
     else:
-        screen_cleaning()
-        print_text()
         enter = input("Введи номер практики или команду: ")
     screen_cleaning()
     pause_is_not_used = True
+    if enter == "q":
+        enter_Time = ''
+        enter = ''
+        continue
     if enter == 'mistakes' or enter == " 1":
         con = False
         while True:
@@ -310,24 +368,40 @@ while not enter in exitEnterMenu:
         else:
             commandMenu = 0
         continue
-    elif enter.replace(".", "", 1).isdigit() and enter in num_added_practices:
+    elif enter.replace(".", "", 1).isdigit():
+        if enter_Time == "1" and enter not in num_added_practices:
+            continue
+        if enter_Time == "2" and enter not in num_added_practices2:
+            continue
+        elif enter_Time == "2" and enter in num_added_practices2:
+            enter = digit_conversion_for_2(enter)
         russian_sentences, english_sentences = load_sentences(enter, XforLoadPause = 0)
     else:
         continue
-    if enter == '15' and pause_is_not_used:
+    formation_setNum = False
+    if enter_Time == "1" and enter == '15' and pause_is_not_used:
         if random == "off":
             setNum = [x for x in range(0, len(russian_sentences))]
         if random == "on":
             setNum = [[x for x in range(i, i+3)] for i in range(0, len(russian_sentences), 3)]
             shuffle(setNum)
-            setNum = list(chain(*setNum))        
+            setNum = list(chain(*setNum))
         tm_temp = 0
-    else:
-        if pause_is_not_used:
-            setNum = [i for i in range(0, len(russian_sentences))]
-            if random == "on":
-                shuffle(setNum)
-            tm_temp = 0      
+        formation_setNum = True
+    if enter_Time == "2" and enter == '45' and pause_is_not_used:
+        if random == "off":
+            setNum = [x for x in range(0, len(russian_sentences))]
+        if random == "on":
+            setNum = [[x for x in range(i, i+3)] for i in range(0, len(russian_sentences), 3)]
+            shuffle(setNum)
+            setNum = list(chain(*setNum))
+        tm_temp = 0
+        formation_setNum = True
+    if pause_is_not_used and formation_setNum == False:
+        setNum = [i for i in range(0, len(russian_sentences))]
+        if random == "on":
+            shuffle(setNum)
+        tm_temp = 0      
     russian_sentences, english_sentences = normalize_list(russian_sentences, english_sentences)
     tic = time()
     list_mistakes = []
