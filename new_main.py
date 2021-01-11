@@ -219,7 +219,7 @@ num_added_practices = [str(x) for x in range(1, added_practices+1)]
 for_push_NAP = [5.1, 11.1, 21.1, 33.1, 36.1]
 for i in for_push_NAP:
     num_added_practices.append(str(i))
-added_practices = 14
+added_practices = 13
 num_added_practices2 = []
 num_added_practices2 = [str(x) for x in range(1, added_practices+1)]
 for_push_NAP = []
