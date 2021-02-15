@@ -97,8 +97,12 @@ Future Simple
 """)
 
 
-def digit_conversion_for_2(enter):
+def digit_conversion_for_2(enter, state = False):
     dict_digit = {"1": "37", "2": "38", "3": "39", "4": "40", "5": "41", "6": "42", "7": "43", "8": "44", "9": "45", "10": "46", "11": "47", "12": "48", "13": "49", "14": "50" }
+    if enter[-1] == 'm':
+        return enter
+    if state == True:
+        return list(dict_digit.keys())[list(dict_digit.values()).index(enter)]
     return dict_digit[enter]
 
 
@@ -137,9 +141,19 @@ def normalize_list(russian_sentences_, english_sentences_):
     return russian_sentences_, english_sentences_
 
 
-def show_stat():
+def show_stat(enter):
     tm_ = (time() - tic) + tm_temp
-    print("\n", f"Practice {enter}", sep="")
+    if enter_Time == "2" and pause_is_not_used:
+        state = True
+        enter = digit_conversion_for_2(enter, state)
+    if not pause_is_not_used:
+        if enter_Time_pause == "2":
+            state = True
+            enter = digit_conversion_for_2(enter, state)
+        print("\n", f'Pause. Time {enter_Time_pause}.', sep ="", end =" ")
+    else:
+        print("\n", f'Time {enter_Time}.', sep ="", end =" ")
+    print(f"Practice {enter}", sep="")
     print("\n", " " * 1, int(tm_ / 60), " min ", round(tm_ % 60), " sec", sep="")
     print(" " * 1, f"{correctly_sentence} correctly / ", end="")
     print(f"{percent_mistakes_temp} mist / {pass_sentence} pass / {percent_mistakes} total")
@@ -227,7 +241,6 @@ for i in for_push_NAP:
     num_added_practices2.append(str(i))
 enter_Time = ''
 enter = ''
-exitEnterMenu = ['exit', 'q', ' 6']
 returnMistakes = False
 while True: # цикл прервется при вводе q
     XforLoadPause = ''
@@ -238,6 +251,7 @@ while True: # цикл прервется при вводе q
     if enter_Time == "":
         enter_Time = input("Введи номер: ")
     if enter_Time  == "q":
+        screen_cleaning()
         break
     if enter_Time.isdigit() and int(enter_Time) < 3:
         if enter_Time == "1":
@@ -291,7 +305,7 @@ while True: # цикл прервется при вводе q
         pause = read_pause()
         if pause == 0:
             continue
-        setNum, enter, tm_temp, now, XforLoadPause = pause[0], pause[1], pause[2], pause[3], pause[4]
+        setNum, enter, tm_temp, now, XforLoadPause, enter_Time_pause = pause[0], pause[1], pause[2], pause[3], pause[4], pause[5]
         russian_sentences, english_sentences = load_sentences(enter, XforLoadPause)
         mistakes = mistakesForPause(now)
     elif enter == 'clear mistakes' or enter == " 4":
@@ -427,9 +441,14 @@ while True: # цикл прервется при вводе q
             print('1)time, 2)show stat, 3)pause, 4)exit(q)')
             continue
         if translate == "pause" or translate == " 3":
-            pause = list(range(0, 5))
+            pause = list(range(0, 6))
             tm_temp = (time() - tic) + tm_temp
-            pause[0], pause[1], pause[2], pause[3], pause[4] = setNum, enter, tm_temp, now, XforLoadPause
+            if not pause_is_not_used:
+                iTime = enter_Time
+                enter_Time = enter_Time_pause
+            pause[0], pause[1], pause[2], pause[3], pause[4], pause[5] = setNum, enter, tm_temp, now, XforLoadPause, enter_Time
+            if not pause_is_not_used:
+                enter_Time = iTime
             with open('pause.txt', 'w') as file:
                 dump(pause, file)
             break
@@ -443,7 +462,7 @@ while True: # цикл прервется при вводе q
             setNum.remove(num)
             continue
         if translate == "show stat" or translate == " 2":
-            show_stat()
+            show_stat(enter)
             print()
             continue
         if translate == "exit" or translate == "q" or translate == " 4":
@@ -470,5 +489,5 @@ while True: # цикл прервется при вводе q
             percent_mistakes_temp += 1
         setNum.remove(num)
     if len(setNum) == 0:
-        show_stat()
+        show_stat(enter)
         input()
