@@ -10,7 +10,7 @@ from subprocess import run
 from importlib import reload
 import download_update
 import datetime
-# import input_wait
+import input_wait
 
 
 def print_Tense():
@@ -26,6 +26,7 @@ def showCommandMenu():
 menu: 1)mistakes({numberMistakes}), 2)pause({pEx}), 3)del pause, 4)clear mistakes, 5)update, 6)exit(q)
 translate: 1)time, 2)show stat, 3)pause, 4)exit(q)
 random {random} (for change enter "r+ / r-")
+input timer {time_input} ({speed_write_pr}) (for change enter "t+ / t-", speed - "speed normal / slowly")
 """
     return strmenu
 
@@ -228,6 +229,9 @@ conn1 = sqlite3.connect("new_mistakes.db", isolation_level=None)
 cursor1 = conn1.cursor()
 commandMenu = 0
 random = "off"
+time_input = "off"
+speed_write = 0.5
+speed_write_pr = "normal"
 added_practices = 36
 num_added_practices = [str(x) for x in range(1, added_practices+1)]
 for_push_NAP = [5.1, 11.1, 21.1, 33.1, 36.1]
@@ -366,6 +370,20 @@ while True: # цикл прервется при вводе q
     elif enter == 'r+':
         random = "on"
         continue
+    elif enter == 't-':
+        time_input = "off"
+        continue
+    elif enter == 't+':
+        time_input = "on"
+        continue
+    elif enter == 'speed slowly':
+        speed_write = 0.8
+        speed_write_pr = "slowly"
+        continue
+    elif enter == 'speed normal':
+        speed_write = 0.5
+        speed_write_pr = "normal"
+        continue
     elif enter == 'del pause' or enter == ' 3':
         XforLoadPause = ''
         if system() == "Windows":
@@ -431,12 +449,15 @@ while True: # цикл прервется при вводе q
         num = setNum[0]
         print(len(setNum), end=". ")
         print(russian_sentences[num], end=" ")
-        translate = input()
-        # input_wait.prompt = str(len(setNum)) + ". " + str(russian_sentences[num]) + " "
-        # translate = input_wait.timed_input("")
-        # print()
-        # if str(type(translate)) == "<class 'NoneType'>":
-        #     translate = ""
+        if time_input == "off":
+            translate = input()
+        if time_input == "on":
+            input_wait.prompt = str(len(setNum)) + ". " + str(russian_sentences[num]) + " "
+            set_speed = len(russian_sentences[num]) * speed_write
+            translate = input_wait.timed_input("", set_speed)
+            print()
+            if str(type(translate)) == "<class 'NoneType'>":
+                translate = ""
         if translate == "?":
             print('1)time, 2)show stat, 3)pause, 4)exit(q)')
             continue
