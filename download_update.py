@@ -82,19 +82,19 @@ def update():
         o.close()
         counter_updates += 1
         update_download = True
-    # if list_update[3] > version_input_wait:
-    #     url = 'https://raw.githubusercontent.com/LescautManon/Manon/master/input_wait.py'
-    #     filename = "input_wait.py"
-    #     urlretrieve(url, filename)
-    #     print('update input_wait.py OK')
-    #     old_version = version_input_wait
-    #     new_version = list_update[3]
-    #     data = open('download_update.py').read()
-    #     o = open('download_update.py', 'w')
-    #     o.write(re.sub(f"version_input_wait = {old_version}", f"version_input_wait = {new_version}", data))
-    #     o.close()
-    #     counter_updates += 1
-    #     update_download = True
+    if list_update[3] > version_input_wait:
+        url = 'https://raw.githubusercontent.com/LescautManon/Manon/master/input_wait.py'
+        filename = "input_wait.py"
+        urlretrieve(url, filename)
+        print('update input_wait.py OK')
+        old_version = version_input_wait
+        new_version = list_update[3]
+        data = open('download_update.py').read()
+        o = open('download_update.py', 'w')
+        o.write(re.sub(f"version_input_wait = {old_version}", f"version_input_wait = {new_version}", data))
+        o.close()
+        counter_updates += 1
+        update_download = True
     if counter_updates == 0:
         print("Обновлений нет")
         return update_main, update_download
