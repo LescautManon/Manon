@@ -2,10 +2,10 @@ from urllib.request import urlretrieve
 from urllib.request import urlopen
 from urllib.error import URLError
 
-version_main = 14
+version_main = 15
 version_database = 4
-version_download_update = 4
-version_input_wait = 1
+version_download_update = 5
+version_input_wait = 2
 list_update = []
 
 
