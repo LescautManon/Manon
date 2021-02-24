@@ -10,7 +10,7 @@ from subprocess import run
 from importlib import reload
 import download_update
 import datetime
-import input_wait
+# import input_wait
 
 
 def print_Tense():
@@ -24,7 +24,7 @@ def print_Tense():
 def showCommandMenu():
     strmenu = f"""\
 menu: 1)mistakes({numberMistakes}), 2)pause({pEx}), 3)del pause, 4)clear mistakes, 5)update, 6)exit(q)
-translate: 1)time, 2)show stat, 3)pause, 4)exit(q)
+translate: 1)time, 2)show stat, 3)pause, 4)exit(q), 5)clear
 random {random} (for change enter "r+ / r-")
 input timer {time_input} ({speed_write_pr}) (for change enter "t+ / t-", speed - "speed normal / slowly")
 """
@@ -195,7 +195,7 @@ def showMistakes():
         practice.append(date[u][1])
         date[u] = date[u][0]
     for num, i in enumerate(date):
-        print(str(num + 1)  + '.', 'Practice', str(practice[num]) + '.', i)
+        print(str(num + 1)  + '.', str(practice[num]) + '.', i)
     print()
     return date
 
@@ -221,6 +221,7 @@ def mistakesForPause(now):
 
 if system() == "Windows":
     clear = "cls"
+    import input_wait
 else:
     clear = "clear"
 conn = sqlite3.connect("mydatabase.db")
@@ -310,6 +311,7 @@ while True: # цикл прервется при вводе q
         if pause == 0:
             continue
         setNum, enter, tm_temp, now, XforLoadPause, enter_Time_pause = pause[0], pause[1], pause[2], pause[3], pause[4], pause[5]
+        enter_for_write = enter
         russian_sentences, english_sentences = load_sentences(enter, XforLoadPause)
         mistakes = mistakesForPause(now)
     elif enter == 'clear mistakes' or enter == " 4":
@@ -445,6 +447,10 @@ while True: # цикл прервется при вводе q
         now = datetime.datetime.now()
         now = now.strftime("%d-%m-%Y %H:%M:%S")
         mistakes = []
+    if enter_Time == "1" and pause_is_not_used:
+        enter_for_write = enter
+    if enter_Time == "2" and pause_is_not_used:
+        enter_for_write = digit_conversion_for_2(enter, True)
     while setNum:
         num = setNum[0]
         print(len(setNum), end=". ")
@@ -458,8 +464,11 @@ while True: # цикл прервется при вводе q
             print()
             if str(type(translate)) == "<class 'NoneType'>":
                 translate = ""
+        if translate == "clear" or translate == " 5":
+            screen_cleaning()
+            continue
         if translate == "?":
-            print('1)time, 2)show stat, 3)pause, 4)exit(q)')
+            print('1)time, 2)show stat, 3)pause, 4)exit(q), 5)clear')
             continue
         if translate == "pause" or translate == " 3":
             pause = list(range(0, 6))
@@ -500,7 +509,7 @@ while True: # цикл прервется при вводе q
         if translate != english_sentences[num]:
             print(english_sentences[num])
             if english_sentences[num] not in mistakes and len(translate) != 0:
-                temp = tuple([tuple([now]) + tuple([enter]) + tuple([russian_sentences[num]]) + tuple([english_sentences[num]])])
+                temp = tuple([tuple([now]) + tuple(['Time ' + enter_Time + ". Practice " + enter_for_write]) + tuple([russian_sentences[num]]) + tuple([english_sentences[num]])])
                 cursor1.executemany("INSERT INTO albums VALUES (?,?,?,?)", temp)
                 conn1.commit()
             list_mistakes.append(len(setNum))
@@ -511,4 +520,5 @@ while True: # цикл прервется при вводе q
         setNum.remove(num)
     if len(setNum) == 0:
         show_stat(enter)
+        print("\n\n\npress enter to continue")
         input()
