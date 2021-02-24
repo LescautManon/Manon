@@ -3,9 +3,11 @@ import time
 import sys
 
 # prompt = 'Enter answer: '
+prompt = ""
 
 
-def timed_input(caption, timeout=5, _delay=0.02):
+# def timed_input(caption, timeout=5, _delay=0.02):
+def timed_input(caption, timeout, _delay=0.04):
     def echo(c):
         sys.stdout.write(c)
         sys.stdout.flush()
