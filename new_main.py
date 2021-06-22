@@ -1,16 +1,27 @@
-import sqlite3
+from sqlite3 import connect
 from platform import system
 from subprocess import Popen
 from os.path import exists
 from json import load, dump
 from itertools import chain
 from random import shuffle
+from random import randrange
+from time import sleep
+# import readline
 from time import time
 from subprocess import run
 from importlib import reload
 import download_update
-import datetime
-# import input_wait
+from datetime import datetime
+from re import findall
+
+
+if system() == "Windows":
+    import input_wait
+    clear = "cls"
+else:
+    # import 
+    clear = "clear"
 
 
 def print_Tense():
@@ -38,7 +49,7 @@ Present Simple
 2. I, We, You, They + verb. (2)
 3. I, We, You, They + verb. (3)
 4. I, We, You, They + verb. He/She/It + verb + s. (4)
-5. I, We, You, They + verb. (5.1 - 5.3)
+5. Test. (5.1 - 5.3)
 5.1 Предложения из теста 5, которые не встречаются в предыдущих практиках.
 6. Want. (6)
 7. I like + ... (7)
@@ -126,20 +137,26 @@ def load_sentences(enter, XforLoadPause):
         russian_sentences_ = (cursor1.fetchall())
         cursor1.execute(f"SELECT eng FROM albums WHERE datetime = '{XforLoadPause}'  ")
         english_sentences_ = (cursor1.fetchall())
-        return russian_sentences_, english_sentences_
+        cursor1.execute(f"SELECT other_translates FROM albums WHERE datetime = '{XforLoadPause}'  ")
+        other_translates_ = (cursor1.fetchall())
+        return russian_sentences_, english_sentences_, other_translates_
 
     cursor.execute(f"SELECT rus FROM albums WHERE num_practice='{enter}' ")
     russian_sentences_ = (cursor.fetchall())
     cursor.execute(f"SELECT eng FROM albums WHERE num_practice='{enter}' ")
-    english_sentences_ = (cursor.fetchall()) 
-    return russian_sentences_, english_sentences_
+    english_sentences_ = (cursor.fetchall())
+    cursor.execute(f"SELECT other_translates FROM albums WHERE num_practice='{enter}' ")
+    other_translates_ = (cursor.fetchall())
+    return russian_sentences_, english_sentences_, other_translates_
 
 
-def normalize_list(russian_sentences_, english_sentences_):
+def normalize_list(russian_sentences_, english_sentences_, other_translates_):
     for u, i_ in enumerate(russian_sentences_):
         russian_sentences_[u] = russian_sentences_[u][0]
         english_sentences_[u] = english_sentences_[u][0]
-    return russian_sentences_, english_sentences_
+    for u, i_ in enumerate(other_translates_):
+        other_translates_[u] = other_translates_[u][0]
+    return russian_sentences_, english_sentences_, other_translates_
 
 
 def show_stat(enter):
@@ -153,7 +170,10 @@ def show_stat(enter):
             enter = digit_conversion_for_2(enter, state)
         print("\n", f'Pause. Time {enter_Time_pause}.', sep ="", end =" ")
     else:
-        print("\n", f'Time {enter_Time}.', sep ="", end =" ")
+        if returnMistakes:
+            print("\n", result + ".", sep ="", end =" ")
+        if not returnMistakes:
+            print("\n", f'Time {enter_Time}.', sep ="", end =" ")
     print(f"Practice {enter}", sep="")
     print("\n", " " * 1, int(tm_ / 60), " min ", round(tm_ % 60), " sec", sep="")
     print(" " * 1, f"{correctly_sentence} correctly / ", end="")
@@ -162,15 +182,17 @@ def show_stat(enter):
     if len(list_mistakes) != 0:
         print()
         print("Mistakes:")
-        for i_ in range(0, len(list_mistakes), 4):
+        for i_ in range(0, len(list_mistakes), 5):
             print(list_mistakes[i_], end=". ")
             print(list_mistakes[i_ + 1], end=" ")
             print(list_mistakes[i_ + 2])
             print(list_mistakes[i_ + 3])
+            for i in list_mistakes[i_ + 4]:
+                print(i)
 
 
 def numMist():
-    date = showMistakes()
+    date, practice = showMistakes()
     global numberMistakes
     numberMistakes = len(date)
 
@@ -197,7 +219,7 @@ def showMistakes():
     for num, i in enumerate(date):
         print(str(num + 1)  + '.', str(practice[num]) + '.', i)
     print()
-    return date
+    return date, practice
 
 
 def loadMistakes(date, x):
@@ -207,7 +229,9 @@ def loadMistakes(date, x):
     russian_sentences_ = (cursor1.fetchall())
     cursor1.execute(f"SELECT eng FROM albums WHERE datetime = '{date[x]}'  ")
     english_sentences_ = (cursor1.fetchall())
-    return russian_sentences_, english_sentences_
+    cursor1.execute(f"SELECT other_translates FROM albums WHERE datetime = '{XforLoadPause}'  ")
+    other_translates_ = (cursor1.fetchall())
+    return russian_sentences_, english_sentences_, other_translates_
 
 
 def mistakesForPause(now):
@@ -219,16 +243,12 @@ def mistakesForPause(now):
     return mistakes
 
 
-if system() == "Windows":
-    clear = "cls"
-    import input_wait
-else:
-    clear = "clear"
-conn = sqlite3.connect("mydatabase.db")
+
+conn = connect("mydatabase.db")
 cursor = conn.cursor()
-conn1 = sqlite3.connect("new_mistakes.db", isolation_level=None)
+conn1 = connect("new_mistakes.db", isolation_level=None)
 cursor1 = conn1.cursor()
-commandMenu = 0
+commandMenu = 1
 random = "off"
 time_input = "off"
 speed_write = 0.5
@@ -282,7 +302,7 @@ while True: # цикл прервется при вводе q
         con = False
         while True:
             screen_cleaning()
-            date = showMistakes()
+            date, practice = showMistakes()
             if len(date) == 0:
                 con = True
                 break
@@ -295,7 +315,9 @@ while True: # цикл прервется при вводе q
             if enter == "":
                 continue
             if enter.isdigit() and len(date) >= int(enter) > 0:
-                russian_sentences, english_sentences = loadMistakes(date, int(enter) - 1)
+                russian_sentences, english_sentences, other_translates = loadMistakes(date, int(enter) - 1)
+                practice = practice[int(enter)-1]
+                result = findall(r'Time \d+', practice)[0]
                 enter = str(enter) + "m"
                 returnMistakes = True
                 break
@@ -311,8 +333,7 @@ while True: # цикл прервется при вводе q
         if pause == 0:
             continue
         setNum, enter, tm_temp, now, XforLoadPause, enter_Time_pause = pause[0], pause[1], pause[2], pause[3], pause[4], pause[5]
-        enter_for_write = enter
-        russian_sentences, english_sentences = load_sentences(enter, XforLoadPause)
+        russian_sentences, english_sentences, other_translates = load_sentences(enter, XforLoadPause)
         mistakes = mistakesForPause(now)
     elif enter == 'clear mistakes' or enter == " 4":
         enter = 'clear mistakes'
@@ -409,7 +430,7 @@ while True: # цикл прервется при вводе q
             continue
         elif enter_Time == "2" and enter in num_added_practices2:
             enter = digit_conversion_for_2(enter)
-        russian_sentences, english_sentences = load_sentences(enter, XforLoadPause = 0)
+        russian_sentences, english_sentences, other_translates = load_sentences(enter, XforLoadPause = 0)
     else:
         continue
     formation_setNum = False
@@ -435,8 +456,8 @@ while True: # цикл прервется при вводе q
         setNum = [i for i in range(0, len(russian_sentences))]
         if random == "on":
             shuffle(setNum)
-        tm_temp = 0      
-    russian_sentences, english_sentences = normalize_list(russian_sentences, english_sentences)
+        tm_temp = 0
+    russian_sentences, english_sentences, other_translates = normalize_list(russian_sentences, english_sentences, other_translates)
     tic = time()
     list_mistakes = []
     percent_mistakes_temp = 0
@@ -444,19 +465,26 @@ while True: # цикл прервется при вводе q
     pass_sentence = 0
     percent_mistakes = len(setNum)
     if pause_is_not_used:
-        now = datetime.datetime.now()
+        now = datetime.now()
         now = now.strftime("%d-%m-%Y %H:%M:%S")
         mistakes = []
-    if enter_Time == "1" and pause_is_not_used:
+    if not pause_is_not_used:
+        temp_for_exit_from_cycly = enter_Time
+        enter_Time = enter_Time_pause
+    if enter_Time == "1":
         enter_for_write = enter
-    if enter_Time == "2" and pause_is_not_used:
+    if enter_Time == "2":
         enter_for_write = digit_conversion_for_2(enter, True)
+    qwe = []
+    tired = False
+    tired_count = 0
     while setNum:
         num = setNum[0]
         print(len(setNum), end=". ")
-        print(russian_sentences[num], end=" ")
+        print(russian_sentences[num], end=" ", flush=True)
         if time_input == "off":
-            translate = input()
+            if not tired:
+                translate = input()
         if time_input == "on":
             input_wait.prompt = str(len(setNum)) + ". " + str(russian_sentences[num]) + " "
             set_speed = len(russian_sentences[num]) * speed_write
@@ -464,6 +492,25 @@ while True: # цикл прервется при вводе q
             print()
             if str(type(translate)) == "<class 'NoneType'>":
                 translate = ""
+        if translate == "устал" or translate == "очень устал" or tired:
+            pr = list(english_sentences[num])
+            sleep(0.5)
+            for i in pr:
+                a = randrange(0, 2)
+                a = float("0." + str(a))
+                sleep(a)
+                print(i, end = "", flush=True)
+            print()
+            tired = True
+            tired_count += 1
+            if tired_count == 10 and translate == "устал":
+                tired = False
+                tired_count = 0
+            if translate == "очень устал":
+                tired_count = 0
+            qwe.append(num)
+            setNum.remove(num)
+            continue
         if translate == "clear" or translate == " 5":
             screen_cleaning()
             continue
@@ -486,36 +533,69 @@ while True: # цикл прервется при вводе q
             tm = (time() - tic) + tm_temp
             print(" ", int(tm / 60), " min ", round(tm % 60), " sec", sep="")
             continue
+        other_translates_ = other_translates[num]
+        if other_translates_ == None:
+            other_translates_ = []
+        else:
+            other_translates_ = other_translates_.split("\n")
         if translate == "":
             print(english_sentences[num])
+            for i in other_translates_:
+                print(i)
             pass_sentence += 1
+            qwe.append(num)
             setNum.remove(num)
+            continue
+        if translate[0] == "+" and (translate[1:].isdigit() or translate == "+"):
+            translate = "+1" if translate == "+" else translate
+            ch = int(translate[1:])
+            if ch > len(english_sentences):
+                ch = len(english_sentences)
+            if len(qwe) != 0:
+                for i in range(ch):
+                    if len(qwe) == 0:
+                        continue
+                    setNum.insert(0, qwe[-1])
+                    qwe = qwe[:-1]
             continue
         if translate == "show stat" or translate == " 2":
             show_stat(enter)
             print()
             continue
         if translate == "exit" or translate == "q" or translate == " 4":
+            if not pause_is_not_used:
+                enter_Time = temp_for_exit_from_cycly
             break
-        if not translate[0].istitle() or translate[-1] != ".":
+        if (not translate[0].istitle() or translate[-1] != ".") and translate != " ":
+            if translate[-1] == " ":
+                translate = translate[:-1]
             if not translate[0].istitle():
                 translate = translate[0].upper() + translate[1:]
             if translate[-1] != "." and english_sentences[num][-1] == ".":
                 translate = translate + "."
             if translate[-1] != "?" and english_sentences[num][-1] == "?":
                 translate = translate + "?"
-        if translate == english_sentences[num]:
+        if translate == english_sentences[num] or translate in other_translates_:
             correctly_sentence += 1
-        if translate != english_sentences[num]:
+            qwe.append(num)
+        if translate != english_sentences[num] and translate not in other_translates_:
+            qwe.append(num)
             print(english_sentences[num])
+            for i in other_translates_:
+                print(i)
             if english_sentences[num] not in mistakes and len(translate) != 0:
-                temp = tuple([tuple([now]) + tuple(['Time ' + enter_Time + ". Practice " + enter_for_write]) + tuple([russian_sentences[num]]) + tuple([english_sentences[num]])])
-                cursor1.executemany("INSERT INTO albums VALUES (?,?,?,?)", temp)
+                if returnMistakes:
+                    temp = tuple([tuple([now]) + tuple([result + ". Practice " + enter_for_write]) + tuple([russian_sentences[num]]) + tuple([english_sentences[num]]) + tuple([other_translates[num]])])    
+                else:
+                    temp = tuple([tuple([now]) + tuple(['Time ' + enter_Time + ". Practice " + enter_for_write]) + tuple([russian_sentences[num]]) + tuple([english_sentences[num]]) + tuple([other_translates[num]])])
+                cursor1.executemany("INSERT INTO albums VALUES (?,?,?,?,?)", temp)
                 conn1.commit()
+                mistakes.append(english_sentences[num])
             list_mistakes.append(len(setNum))
             list_mistakes.append(russian_sentences[num])
             list_mistakes.append(translate)
             list_mistakes.append(english_sentences[num])
+            list_mistakes.append(other_translates_)
             percent_mistakes_temp += 1
         setNum.remove(num)
     if len(setNum) == 0:
